@@ -46,7 +46,7 @@ const getPrimaryAttribute = (attr: string) => {
 const heroesFilter = computed(() => {
     let filteredHeroes = state.heroes;
 
-     if (state.search) {
+    if (state.search) {
         filteredHeroes = filteredHeroes.filter((item) => {
             return state.search
                 .toLowerCase()
@@ -65,7 +65,7 @@ const heroesFilter = computed(() => {
 const toggleFilterAttr = (attr: string) => {
     toggleFilter.value = attr.trim();
     if (state.filterAttribute === attr) {
-        state.filterAttribute = ''; 
+        state.filterAttribute = '';
         toggleFilter.value = '';
     } else {
         state.filterAttribute = attr;
@@ -87,16 +87,20 @@ const toggleFilterAttr = (attr: string) => {
                 <h1>Filtrar heróis</h1>
                 <div class="attr_container">
                     <h1>Atributo</h1>
-                    <div v-on:click="toggleFilterAttr('str')" :class="toggleFilter === 'str' ? 'toggleFilter': '' " class="attr_image"
+                    <div v-on:click="toggleFilterAttr('str')" :class="toggleFilter === 'str' ? 'toggleFilter' : ''"
+                        class="attr_image"
                         style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/herogrid/filter-str-active.png&quot;);">
                     </div>
-                    <div v-on:click="toggleFilterAttr('agi')" :class="toggleFilter === 'agi' ? 'toggleFilter': '' " class="attr_image"
+                    <div v-on:click="toggleFilterAttr('agi')" :class="toggleFilter === 'agi' ? 'toggleFilter' : ''"
+                        class="attr_image"
                         style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/herogrid/filter-agi-active.png&quot;);">
                     </div>
-                    <div v-on:click="toggleFilterAttr('int')" :class="toggleFilter === 'int' ? 'toggleFilter': '' " class="attr_image"
+                    <div v-on:click="toggleFilterAttr('int')" :class="toggleFilter === 'int' ? 'toggleFilter' : ''"
+                        class="attr_image"
                         style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/herogrid/filter-int-active.png&quot;);">
                     </div>
-                    <div v-on:click="toggleFilterAttr('all')" :class="toggleFilter === 'all' ? 'toggleFilter': '' " class="attr_image"
+                    <div v-on:click="toggleFilterAttr('all')" :class="toggleFilter === 'all' ? 'toggleFilter' : ''"
+                        class="attr_image"
                         style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/herogrid/filter-uni-active.png&quot;);">
                     </div>
                 </div>
@@ -112,7 +116,8 @@ const toggleFilterAttr = (attr: string) => {
             </div>
 
             <!-- HEROES -->
-            <div :class="heroesFilter.length === 124 ? 'flex items-center justify-center' : 'flex items-start justify-start'"
+            <TransitionGroup name="heroes" tag="div"
+                :class="heroesFilter.length === 124 ? 'flex items-center justify-center' : 'flex items-start justify-start; min-h-[500px]'"
                 class="py-4 md:py-5 flex-wrap mt-6 pb-10 main w-full h-full">
                 <div class="group hero_content flex flex-col justify-center items-center shadow-gray-700 transform hover:-translate-y-1 hover:scale-125 hover:z-50 z-10"
                     v-for="hero in heroesFilter" :key="hero.id"
@@ -134,252 +139,30 @@ const toggleFilterAttr = (attr: string) => {
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </TransitionGroup>
         </div>
     </section>
 </template>
 
 <style scoped>
-* {
-    box-sizing: border-box;
-    font-family: "Radiance", "Noto Sans", sans-serif;
+.heroes-enter-active, .heroes-leave-active {
+  transition: all 0.5s;
+}
+.heroes-enter-from {
+  opacity: 0;
+  transform: scale(0.5);
+}
+.heroes-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.heroes-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+.heroes-leave-to {
+  opacity: 0;
+  transform: scale(0.5);
 }
 
-.main {
-    /* width: 1200px; */
-    min-height: 1500px;
-    margin-top: 15px;
-    transition-property: height;
-    transition-timing-function: ease-out;
-    transition-duration: .2s;
-    animation-duration: 1s;
-    animation-timing-function: ease-out;
-    animation-delay: .1s;
-    animation-iteration-count: 1;
-    animation-name: NeQOPQgh06ixPcmoyJM01;
-    position: relative;
-}
-
-.section_main {
-    width: 100%;
-    padding: 0px 100px 0px 100px;
-    min-height: 1500px;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-attachment: fixed;
-    position: relative;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.section_title {
-    color: #fff;
-    font-size: 60px;
-    font-family: Reaver, serif;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 100px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    line-height: 112%;
-}
-
-.section_desc {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0px auto;
-    color: #ddd;
-    font-size: 26px;
-    text-align: center;
-    font-weight: 100;
-    margin-bottom: 30px;
-}
-
-.search_container {
-    width: 100%;
-    max-width: 1200px;
-    padding: 10px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #11111190;
-    box-shadow: 0px 0px 30px #00000050;
-    margin-top: 20px;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
-
-    h1 {
-        color: #fff;
-        width: 180px;
-        font-size: 18px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-right: 10px;
-        margin-left: 10px;
-    }
-}
-
-.attr_container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: 20px;
-
-    h1 {
-        color: #808fa6;
-        font-size: 17px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-right: 20px;
-    }
-}
-
-.attr_image {
-    width: 44px;
-    height: 34px;
-    margin-left: -4px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    transition-property: filter;
-    transition-timing-function: ease-in-out;
-    transition-duration: .1s;
-    cursor: pointer;
-    color: #fff;
-    filter: brightness(0.5) saturate(0);
-}
-
-.filter {
-    width: 250px;
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
-}
-
-.filter_content {
-    width: 250px;
-    height: 50px;
-    margin-left: 10px;
-    background-color: #25282a;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.filter_img {
-    width: 26px;
-    height: 26px;
-    min-width: 26px;
-    min-height: 26px;
-    margin-right: 10px;
-    margin-left: 10px;
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-
-form {
-    flex-grow: 1;
-    margin-right: 10px;
-}
-
-input {
-    height: 30px;
-    width: 100%;
-    border: 0px solid transparent;
-    background-color: #25282a;
-    outline: none;
-    color: #fff;
-    font-size: 18px;
-    padding: 4px;
-}
-
-.hero_content {
-    margin: 5px;
-    box-shadow: 1px 1px 4px #000;
-    filter: saturate(0.8);
-    transition-property: transform, box-shadow, background-size, opacity, top, left;
-    transition-timing-function: ease-out;
-    transition-duration: .3s;
-    background-position: center;
-    background-size: 110%;
-    background-repeat: no-repeat;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.hero_text {
-    font-size: 18px;
-    line-height: 20px;
-    font-family: "Reaver", serif;
-    font-weight: 600;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 8px;
-    padding-left: 0px;
-    text-shadow: 0px 0px 4px #000;
-}
-
-.hero_hover_text {
-    width: 100%;
-    height: 50px;
-    position: absolute;
-    bottom: 0px;
-    left: 5px;
-    flex-direction: row;
-    align-items: center;
-    transition-property: opacity, bottom;
-    transition-timing-function: ease-out;
-    transition-duration: .2s;
-}
-
-.hero_shadow_content {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transition-property: opacity, bottom;
-    transition-timing-function: ease-out;
-    transition-duration: .2s;
-    opacity: 0;
-}
-
-.hero_shadow_main {
-    left: 0px;
-    bottom: 0px;
-    right: 0px;
-}
-
-.hero_shadow_main_content {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    pointer-events: none;
-}
-
-.hero_shadow_hover {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-.toggleFilter {
-    filter: brightness(1) saturate(1);
-}
-
-@keyframes NeQOPQgh06ixPcmoyJM01 {
-    0% {
-        transform: translateY(90px);
-        opacity: 0
-    }
-
-    100% {
-        transform: translateY(0px);
-        opacity: 1
-    }
-}
 </style>
