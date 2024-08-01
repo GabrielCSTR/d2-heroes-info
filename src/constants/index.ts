@@ -6,4 +6,5 @@ export interface IHero {
     stats: {
         primaryAttribute: string
     }
+    attr?: string
 }
