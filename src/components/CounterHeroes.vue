@@ -5,6 +5,7 @@ import { API_URL, queryGetAllHeroes, stractzApi } from '@/utils'
 import { type IHero } from '@/constants'
 import { reactive } from 'vue';
 import { computed } from 'vue';
+import { useHeroeStore } from '@/stores/heroInfo';
 
 const toggleFilter = ref();
 const primaryAttribute = [
@@ -20,6 +21,8 @@ const state = reactive({
     filterAttribute: null as any,
 });
 
+const appHeroStore: any = useHeroeStore();
+
 onMounted(async () => {
     await stractzApi
         .post(
@@ -32,6 +35,8 @@ onMounted(async () => {
             const { heroes } = reponse?.data?.data?.constants;
             console.log("DATA", heroes);
             state.heroes = heroes.sort((a: IHero, b: IHero) => a.displayName.localeCompare(b.displayName));
+            appHeroStore.SET_ALL_HEROES(state.heroes)
+
         })
         .catch((err) => {
             console.error('Error:', err);
@@ -70,10 +75,6 @@ const toggleFilterAttr = (attr: string) => {
     } else {
         state.filterAttribute = attr;
     }
-}
-
-const openHeroInfo = (heroInfo: IHero) =>{
-
 }
 </script>
 
