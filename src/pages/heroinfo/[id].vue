@@ -34,7 +34,7 @@ const getAdjacentValues = (target: string) => {
     const index = allHeroes.findIndex((item) => item.shortName === target);
 
     if (index !== -1) {
-        previousHero.value = index > 0 ? allHeroes[index - 1] : null;
+        previousHero.value = index > 0 ? allHeroes[index - 1] : allHeroes[0];
         nextHero.value = index < allHeroes.length - 1 ? allHeroes[index + 1] : null;
     }
 };
@@ -123,14 +123,14 @@ onMounted(async () => {
             </div>
         </div>
 
-        <div v-show="previousHero && nextHero" class="__heroinfo_next_container pt-20 pb-20"
+        <div v-show="nextHero" class="__heroinfo_next_container pt-20"
             style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/backgrounds/grey_painterly.png&quot;);">
             <div class="__heroinfo_next">
 
                 <div @click.prevent="navigateToHero(previousHero?.shortName)"
                     class="__heroInfo_next_hero_start cursor-pointer"
                     style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/backgrounds/grey_painterly_wide.png&quot;);">
-                    <img class="__heroinfo_next_hero_img_start"
+                    <img class="__heroinfo_next_hero_img_start hover:-translate-y-5 transition-all duration-500"
                         :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/heroes/crops/${previousHero?.shortName}.png`">
                     <div class="__heroinfo_next_hero_details">
                         <div class="__heroinfo_next_hero_details_title">Herói anterior</div>
@@ -157,9 +157,9 @@ onMounted(async () => {
                 </router-link>
 
                 <div @click.prevent="navigateToHero(nextHero?.shortName)"
-                    class="__heroInfo_next_hero_end cursor-pointer"
+                    class="__heroInfo_next_hero_end cursor-pointer "
                     style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/backgrounds/grey_painterly_wide.png&quot;);">
-                    <img class="__heroinfo_next_hero_img"
+                    <img class="__heroinfo_next_hero_img hover:-translate-y-5 transition-all duration-500"
                         :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/heroes/crops/${nextHero?.shortName}.png`">
                     <div class="__heroinfo_next_hero_details">
                         <div class="__heroinfo_next_hero_details_title">Próximo herói</div>
@@ -174,6 +174,10 @@ onMounted(async () => {
 
             </div>
         </div>
+
+        <footer class="__heroinfo_footer">
+            <div class="__heroinfo_footer_text">Dota2 Counters Picks</div>
+        </footer>
     </div>
 </template>
 
@@ -401,6 +405,14 @@ onMounted(async () => {
     align-items: center;
 }
 
+.__heroInfo_next_hero_start:hover {
+    filter: brightness(1.2)
+}
+
+.__heroInfo_next_hero_start:hover {
+    bottom: 0px
+}
+
 .__heroInfo_next_hero_start {
     width: 45%;
     height: 150px;
@@ -416,6 +428,14 @@ onMounted(async () => {
     transition-property: filter, transform;
     transition-timing-function: ease-in-out;
     transition-duration: .2s;
+}
+
+.__heroInfo_next_hero_end:hover {
+    filter: brightness(1.2)
+}
+
+.__heroInfo_next_hero_end:hover {
+    bottom: 0px
 }
 
 .__heroInfo_next_hero_end {
@@ -539,6 +559,23 @@ onMounted(async () => {
     letter-spacing: 2px;
     margin-top: 8px;
     text-align: center;
+}
+
+.__heroinfo_footer {
+    text-align: center;
+    width: 100%;
+    z-index: 5;
+    padding: 30px;
+    background-color: #000;
+}
+
+.__heroinfo_footer_text {
+    text-align: center;
+    font-size: 14px;
+    color: #777;
+    width: 60%;
+    margin: 0 auto;
+    max-width: 500px;
 }
 
 @keyframes animation_opacity {
