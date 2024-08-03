@@ -14,35 +14,27 @@ query {
     }
 }
     `
-export const queryGetHeroInfo = `
-query GetHeroMatchUps($heroId: Short!, $matchLimit: Int!, $bracketBasicIds: [RankBracketBasicEnum]) {
-        heroStats {
-                heroVsHeroMatchup(
-                    heroId: $heroId
-
-                    matchLimit: $matchLimit
-                    bracketBasicIds: $bracketBasicIds
-                ) {
-                advantage {
-                    heroId
-                    matchCountWith
-                    matchCountVs
-                with {
-                        heroId2
-                        matchCount
-                        winCount
-                        synergy
-                        winsAverage
-                    }
-                vs {
-                    heroId2
-                    matchCount
-                    winCount
-                    synergy
-                    winsAverage
-                }
+export const queryGetHeroInfo= (heroId: number) =>
+`query getHeroMatchups {
+    heroStats {
+        matchUp(heroId: ${heroId}, matchLimit: 0, take: 130, bracketBasicIds: [CRUSADER_ARCHON, LEGEND_ANCIENT, DIVINE_IMMORTAL]) {
+            heroId
+            vs {
+                heroId2
+                synergy
+                matchCount
+                winCount
+                winRateHeroId1
+                winRateHeroId2
+            }
+            with {
+                heroId2
+                synergy
+                matchCount
+                winCount
+                winRateHeroId1
+                winRateHeroId2
             }
         }
     }
-}
-`;
+}`;

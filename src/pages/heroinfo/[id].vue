@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { API_URL, stractzApi, queryGetHeroInfo } from '@/utils';
+import { API_URL, stractzApi, queryGetHeroInfo, getAllHeroes } from '@/utils';
 import { reactive, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useHeroeStore } from '@/stores/heroInfo';
-import type { IHero } from '@/constants';
+import { primaryAttributes, type IHero, type IHeroesVs } from '@/constants';
+import BadvsHeroes from '@/components/BadVsHeroes.vue';
+import GoodVsHeroes from '@/components/GoodVsHeroes.vue'
 
 const router = useRouter();
 const route = useRoute();
@@ -12,14 +14,10 @@ const appHeroStore = useHeroeStore();
 const state = reactive({
     heroInfo: null as any,
     heroRouteInfo: null as unknown as IHero,
+    badVsHeroes: null as unknown as IHeroesVs[],
+    goodVsHeroes: null as unknown as IHeroesVs[],
 });
 
-const primaryAttributes = [
-    { name: 'agi', type: 'hero_agility' },
-    { name: 'str', type: 'hero_strength' },
-    { name: 'int', type: 'hero_intelligence' },
-    { name: 'all', type: 'hero_universal' },
-];
 
 const getPrimaryAttribute = (attr: string | undefined) => {
     if (!attr) return '';
@@ -30,7 +28,7 @@ const previousHero = ref<IHero | null>(null);
 const nextHero = ref<IHero | null>(null);
 const allHeroes = appHeroStore.GET_ALL_HEROES();
 
-const getAdjacentValues = (target: string) => {
+const getAdjacentHeroes = (target: string) => {
     const index = allHeroes.findIndex((item) => item.shortName === target);
 
     if (index !== -1) {
@@ -56,23 +54,113 @@ const navigateToHero = async (heroName: string | undefined) => {
     }
 };
 
+const calculateWinrate = (win: number, total: number) => {
+  if (isNaN(win) || isNaN(total)) {
+    throw new Error("One entry in the winrate calculation is not a number");
+  }
+  return Number((win / total).toPrecision(5));
+};
+
+const calculateSynergy = (observedWinrate: number, winrate1: number, winrate2: number) => {
+    return Number(
+    (
+      (observedWinrate - (-0.48 + 0.98 * winrate1 + 0.98 * winrate2)) *
+      100
+    ).toPrecision(4)
+  );
+};
+
+const calculateCounter = (observedWinrate: number, winrate1: number, winrate2: number) => {
+    return Number(
+    ((observedWinrate - (0.5 + winrate1 - winrate2)) * 100).toPrecision(4)
+  );
+};
+
 onMounted(async () => {
+    if(!allHeroes){
+       await getAllHeroes();
+    }
     state.heroRouteInfo = route.params as unknown as IHero;
+
+    if(!state.heroRouteInfo?.id){
+        const heroRouteInfo = allHeroes.find(hero => hero.shortName == state.heroRouteInfo.name);
+        if(heroRouteInfo){
+            state.heroRouteInfo = heroRouteInfo ?? undefined;
+        }
+    }
     appHeroStore.SET_CURRENT_HERO(state.heroRouteInfo);
 
     try {
         const response = await stractzApi.post(API_URL, {
-            query: queryGetHeroInfo,
-            variables: { heroId: parseInt(state.heroRouteInfo?.id.toString()), matchLimit: 0 },
+            query: queryGetHeroInfo(state.heroRouteInfo?.id),
         });
-        state.heroInfo = response.data.data.heroStats;
-        console.log('DATA', state.heroInfo);
+        state.heroInfo = response.data?.data?.heroStats?.matchUp[0];
     } catch (error) {
         console.error('Error:', error);
     }
+    const heroName = appHeroStore.info?.name || appHeroStore.info?.shortName;
 
-    getAdjacentValues(appHeroStore.info?.name);
+    getAdjacentHeroes(heroName);
+
+    console.log("HERO INFO", state.heroInfo);
+
+    state.goodVsHeroes = state.heroInfo.vs.map((hero: IHeroesVs) => {
+        return hero = restructureMatchupObject(hero, true)
+    })
+
+    state.goodVsHeroes.find((hero: any) => {
+        const goodHero = allHeroes.find((item: any) => item.id === hero.heroId2);
+        hero.displayName = goodHero?.displayName;
+        hero.shortName = goodHero?.shortName;
+        // delete hero.winCount;
+        delete hero.winRateHeroId1;
+        delete hero.winRateHeroId2;
+    });
+    state.goodVsHeroes = state.goodVsHeroes.slice(0,10);
+    console.log("GOOD VS HEROES", state.goodVsHeroes);
+
+    state.badVsHeroes = state.heroInfo.vs.sort((a: any, b: any) => {
+        const anticipatedWinRateA = a.synergy; // synergy bad hero
+        const anticipatedWinRateB = b.synergy;
+
+        const winRateA = calculateWinrate(a.winCount, a.matchCount); // match count vs bad hero
+        const winRateB = calculateWinrate(b.winCount, b.matchCount);
+
+        const diffA = anticipatedWinRateA - winRateA;
+        const diffB = anticipatedWinRateB - winRateB;
+
+        return diffA - diffB;
+    });
+
+    state.badVsHeroes.find((hero: any) => {
+        const bestHero = allHeroes.find((item: any) => item.id === hero.heroId2);
+        hero.displayName = bestHero?.displayName;
+        hero.shortName = bestHero?.shortName;
+        hero.winrate = Number((hero.winCount / hero.matchCount).toPrecision(4));
+        delete hero.winCount;
+    });
+    
+    state.badVsHeroes = state.badVsHeroes.sort((a, b) => a.synergy - b.synergy).slice(0, 10)
+
+    console.log("BAD VS HEROES", state.badVsHeroes);
 });
+
+
+const restructureMatchupObject = (matchup: IHeroesVs, isCounter: boolean) => {
+
+    matchup.winrate = Number((matchup.winCount / matchup.matchCount).toPrecision(4));
+    if(isCounter){
+        matchup.difference = calculateCounter(
+            matchup.winrate,
+            matchup.winRateHeroId1,
+            matchup.winRateHeroId2
+        );
+    } else {
+        matchup.winrate = Number((matchup.winCount / matchup.matchCount).toPrecision(4));
+        matchup.difference = calculateSynergy(matchup.winrate,matchup.winRateHeroId1,matchup.winRateHeroId2);
+    }
+    return matchup;
+}
 </script>
 
 <template>
@@ -82,14 +170,14 @@ onMounted(async () => {
 
             <div :class="`__heroinfo_hero_container ${appHeroStore.info?.displayName}`">
                 <video class="_hero_video"
-                    :poster="`https://cdn.akamai.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/${appHeroStore.info?.name}.png`"
+                    :poster="`https://cdn.akamai.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/${appHeroStore.info?.name || appHeroStore.info?.stats}.png`"
                     autoplay preload="auto" loop playsinline>
                     <source type="video/mp4; codecs=&quot;hvc1&quot;"
-                        :src="`https://cdn.akamai.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/${appHeroStore.info?.name}.mov`">
+                        :src="`https://cdn.akamai.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/${appHeroStore.info?.name || appHeroStore.info?.stats}.mov`">
                     <source type="video/webm"
-                        :src="`https://cdn.akamai.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/${appHeroStore.info?.name}.webm`">
+                        :src="`https://cdn.akamai.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/${appHeroStore.info?.name || appHeroStore.info?.stats}.webm`">
                     <img
-                        :src="`https://cdn.akamai.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/${appHeroStore.info?.name}.png`">
+                        :src="`https://cdn.akamai.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/${appHeroStore.info?.name || appHeroStore.info?.stats}.png`">
                 </video>
             </div>
 
@@ -101,7 +189,7 @@ onMounted(async () => {
 
             <div class="_heroinfo_sumary">
                 <div class="__heroinfo_attr_content">
-                    <img :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(appHeroStore.info.attr)}.png`"
+                    <img :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(appHeroStore.info?.stats?.primaryAttribute)}.png`"
                         class="w-8 h-8">
                     <div class="_heroinfo_sumary_attr">Força</div>
                 </div>
@@ -109,7 +197,7 @@ onMounted(async () => {
             </div>
 
             <div class="__heroinfo_left_info">
-                <img :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(appHeroStore.info.attr)}.png`"
+                <img :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(appHeroStore.info?.stats?.primaryAttribute)}.png`"
                     class="w-6 h-6">
                 <div class="__hero_left_text">{{ appHeroStore.info.displayName }}</div>
                 <div class="__hero_left_heroid">{{ appHeroStore.info.id }}</div>
@@ -117,9 +205,21 @@ onMounted(async () => {
             </div>
         </div>
 
-        <div class="__heroinfo_counters">
+        <div  class="__heroinfo_counters">
             <div class="__heroinfo_counters_title">
-                <div class="__heroinfo_counters_title_text">Counters:</div>
+                <div class="__heroinfo_counters_title_text">Heroes Counters:</div>
+                
+                <div class="flex flex-row space-x-4">
+                    <div class="flex-1 flex flex-col space-y-4">
+                        <BadvsHeroes v-show="state.badVsHeroes" :bad-vs-heroes="state.badVsHeroes" />
+                    </div>
+
+                    <div class="flex-1 flex flex-col space-y-4">
+                       <GoodVsHeroes v-show="state.goodVsHeroes" :good-vs-heroes="state.goodVsHeroes" />
+                    </div>
+                </div>
+               
+
             </div>
         </div>
 
@@ -176,6 +276,10 @@ onMounted(async () => {
         </div>
 
         <footer class="__heroinfo_footer">
+            <div class="flex flex-row justify-center items-center m-0 mb-2">
+                <a href="/home"><img class="max-h-[30px]"
+                        src="https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/dota_footer_logo.png"></a>
+            </div>
             <div class="__heroinfo_footer_text">Dota2 Counters Picks</div>
         </footer>
     </div>
