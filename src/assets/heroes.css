@@ -1,0 +1,14 @@
+.abaddon, .alchemist, .ancient_apparition, .antimage, .arc_warden, .axe, .bane, .batrider, .beastmaster,
+.brewmaster, .centaur, .chaos_knight, .chen, .rattletrap, .crystal_maiden, .dawnbreaker, .dazzle, .death_prophet,
+.disruptor, .dragon_knight, .drow_ranger, .earth_spirit, .elder_titan, .ember_spirit, .enchantress, .enigma,
+.faceless_void, .grimstroke, .gyrocopter, .hoodwink, .huskar, .invoker, .juggernaut, .keeper_of_the_light, .kunkka,
+.legion_commander, .leshrac, .lich, .life_stealer, .lina, .lion, .luna, .lycan, .magnataur, .marci, .mars,
+.medusa, .mirana, .monkey_king, .morphling, .muerta, .naga_siren, .necrolyte, .night_stalker, .ogre_magi,
+.omniknight, .oracle, .obsidian_destroyer, .pangolier, .phantom_assassin, .phantom_lancer, .queenofpain,
+.razor, .riki, .rubick, .shadow_demon, .nevermore, .shadow_shaman, .silencer, .skywrath_mage, .slardar,
+.sniper, .spectre, .storm_spirit, .sven, .techies, .tidehunter, .tiny, .treant, .troll_warlord,
+.tusk, .undying, .abyssal_underlord, .vengefulspirit, .void_spirit, .windrunner, .skeleton_king, .zuus
+{
+    align-items: flex-start;
+    top: 0;
+}

@@ -124,7 +124,7 @@ const toggleFilterAttr = (attr: string) => {
             <TransitionGroup name="heroes" tag="div"
                 :class="heroesFilter.length === 124 ? 'flex items-center justify-center' : 'flex items-start justify-start; min-h-[500px]'"
                 class="py-4 md:py-5 flex-wrap mt-6 pb-10 main w-full h-full">
-                <router-link :to="{ name: 'HeroDetails', params: { id: hero.id, name: hero.shortName, displayName: hero.displayName, attr: hero.stats.primaryAttribute}}" class="group hero_content flex flex-col justify-center items-center shadow-gray-700 transform hover:-translate-y-1 hover:scale-125 hover:z-50 z-10"
+                <router-link :to="{ name: 'HeroDetails', params: { id: hero.id, name: hero.shortName, shortName: hero.shortName, displayName: hero.displayName, attr: hero.stats.primaryAttribute}}" class="group hero_content flex flex-col justify-center items-center shadow-gray-700 transform hover:-translate-y-1 hover:scale-125 hover:z-50 z-10"
                     v-for="hero in heroesFilter" :key="hero.id"
                     :style="`background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/heroes/${hero.shortName}.png&quot;);left: calc(0% + 122px);top: calc(994px);`">
                     <img v-show="hero.id !== 6"

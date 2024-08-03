@@ -13,10 +13,10 @@ const stateProps = defineProps({
 <template>
     <div class="w-full min-h-0 p-3">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="relative h-full p-2" v-for="(badvs, index) in stateProps.badVsHeroes?.slice(0, 6)"
+            <div class="relative h-full p-2 hover:-translate-y-5 transition-all duration-500" v-for="(badvs, index) in stateProps.badVsHeroes?.slice(0, 6)"
                 :key="badvs.heroId2">
                 <!-- Número do item -->
-                <div class="absolute top-0 left-0 bg-red-500 text-white font-bold px-2 py-1">
+                <div class="absolute top-0 left-0 bg-red-500 text-white font-bold px-2 py-1 rounded-full">
                     {{ index + 1 }}º
                 </div>
 
