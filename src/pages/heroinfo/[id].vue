@@ -77,7 +77,7 @@ const calculateCounter = (observedWinrate: number, winrate1: number, winrate2: n
 };
 
 onMounted(async () => {
-    if(!allHeroes){
+    if(allHeroes.length <= 0){
        await getAllHeroes();
     }
     state.heroRouteInfo = route.params as unknown as IHero;
@@ -88,6 +88,8 @@ onMounted(async () => {
             state.heroRouteInfo = heroRouteInfo ?? undefined;
         }
     }
+    console.log("CURRENT HERO", state.heroRouteInfo);
+    
     appHeroStore.SET_CURRENT_HERO(state.heroRouteInfo);
 
     try {
@@ -104,11 +106,11 @@ onMounted(async () => {
 
     console.log("HERO INFO", state.heroInfo);
 
-    state.goodVsHeroes = state.heroInfo.vs.map((hero: IHeroesVs) => {
+    state.goodVsHeroes = state.heroInfo?.vs.map((hero: IHeroesVs) => {
         return hero = restructureMatchupObject(hero, true)
     })
 
-    state.goodVsHeroes.find((hero: any) => {
+    state.goodVsHeroes?.find((hero: any) => {
         const goodHero = allHeroes.find((item: any) => item.id === hero.heroId2);
         hero.displayName = goodHero?.displayName;
         hero.shortName = goodHero?.shortName;
@@ -116,10 +118,11 @@ onMounted(async () => {
         delete hero.winRateHeroId1;
         delete hero.winRateHeroId2;
     });
-    state.goodVsHeroes = state.goodVsHeroes.slice(0,10);
+    state.goodVsHeroes = state.goodVsHeroes?.slice(0,10);
+
     console.log("GOOD VS HEROES", state.goodVsHeroes);
 
-    state.badVsHeroes = state.heroInfo.vs.sort((a: any, b: any) => {
+    state.badVsHeroes = state.heroInfo?.vs.sort((a: any, b: any) => {
         const anticipatedWinRateA = a.synergy; // synergy bad hero
         const anticipatedWinRateB = b.synergy;
 
@@ -189,7 +192,7 @@ const restructureMatchupObject = (matchup: IHeroesVs, isCounter: boolean) => {
 
             <div class="_heroinfo_sumary">
                 <div class="__heroinfo_attr_content">
-                    <img :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(appHeroStore.info?.stats?.primaryAttribute)}.png`"
+                    <img :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(appHeroStore.info?.attr)}.png`"
                         class="w-8 h-8">
                     <div class="_heroinfo_sumary_attr">Força</div>
                 </div>
@@ -197,7 +200,7 @@ const restructureMatchupObject = (matchup: IHeroesVs, isCounter: boolean) => {
             </div>
 
             <div class="__heroinfo_left_info">
-                <img :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(appHeroStore.info?.stats?.primaryAttribute)}.png`"
+                <img :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(appHeroStore.info?.attr)}.png`"
                     class="w-6 h-6">
                 <div class="__hero_left_text">{{ appHeroStore.info.displayName }}</div>
                 <div class="__hero_left_heroid">{{ appHeroStore.info.id }}</div>
