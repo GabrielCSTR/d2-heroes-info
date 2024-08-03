@@ -1,4 +1,4 @@
-import{B as ve}from"./index-1ct3H5eL.js";const Xe=`
+import{B as ve}from"./index-oXKDAcYW.js";const Xe=`
 query {
     constants {
         heroes {
