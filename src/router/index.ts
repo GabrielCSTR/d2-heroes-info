@@ -1,6 +1,6 @@
 import {
     createRouter,
-    createWebHistory,
+    createWebHashHistory,
     type RouteRecordRaw,
 } from "vue-router";
 
@@ -9,12 +9,12 @@ export const routes: RouteRecordRaw[] = [
     {
         path: "/",
         name: "Home",
-        component: () => import("@/pages/Home.vue"),
+        component: () => import("../pages/Home.vue"),
     },
     {
         path: "/hero/:name",
         name: "HeroDetails",
-        component: () => import("@/pages/heroinfo/[id].vue"),
+        component: () => import("../pages/heroinfo/[id].vue"),
     },
     // {
     // 	path: "/:catchAll(.*)",
@@ -24,7 +24,7 @@ export const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHashHistory(import.meta.env.BASE_URL),
     routes,
     scrollBehavior(to, _, savedPosition) {
         if (to.hash) {
