@@ -6,6 +6,7 @@ import { type IHero } from '@/constants'
 import { reactive } from 'vue';
 import { computed } from 'vue';
 import { useHeroeStore } from '@/stores/heroInfo';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 
 const toggleFilter = ref();
 const primaryAttribute = [
@@ -22,6 +23,7 @@ const state = reactive({
 });
 
 const appHeroStore: any = useHeroeStore();
+const isLoading = ref(true);
 
 onMounted(async () => {
     await stractzApi
@@ -33,13 +35,14 @@ onMounted(async () => {
         )
         .then((reponse) => {
             const { heroes } = reponse?.data?.data?.constants;
-            console.log("DATA", heroes);
             state.heroes = heroes.sort((a: IHero, b: IHero) => a.displayName.localeCompare(b.displayName));
             appHeroStore.SET_ALL_HEROES(state.heroes)
 
         })
         .catch((err) => {
             console.error('Error:', err);
+        }).finally(() => {
+            isLoading.value = false;
         })
 })
 
@@ -118,9 +121,10 @@ const toggleFilterAttr = (attr: string) => {
                     </div>
                 </div>
             </div>
-
+            
+            <LoadingSpinner v-if="isLoading" :isLoading="isLoading" />
             <!-- HEROES -->
-            <TransitionGroup name="heroes" tag="div"
+            <TransitionGroup v-else name="heroes" tag="div"
                 :class="heroesFilter.length === 124 ? 'flex items-center justify-center' : 'flex items-start justify-start; min-h-[500px]'"
                 class="py-4 md:py-5 flex-wrap mt-6 pb-10 main w-full h-full">
                 <router-link :to="{ name: 'HeroDetails', params: { id: hero.id, name: hero.shortName, shortName: hero.shortName, displayName: hero.displayName, attr: hero.stats.primaryAttribute}}" class="group hero_content flex flex-col justify-center items-center shadow-gray-700 transform hover:-translate-y-1 hover:scale-125 hover:z-50 z-10"
