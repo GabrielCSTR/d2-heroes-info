@@ -9,6 +9,6 @@
 .sniper, .spectre, .storm_spirit, .sven, .techies, .tidehunter, .tiny, .treant, .troll_warlord,
 .tusk, .undying, .abyssal_underlord, .vengefulspirit, .void_spirit, .windrunner, .skeleton_king, .zuus
 {
-    align-items: flex-start;
-    top: 0;
+    align-items: flex-start !important;
+    top: 0 !important;
 }

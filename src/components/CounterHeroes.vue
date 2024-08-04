@@ -79,19 +79,18 @@ const toggleFilterAttr = (attr: string) => {
 </script>
 
 <template>
-    <section class="section_main"
-        style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/backgrounds/greyfade.jpg&quot;);">
+    <section class="w-full min-h-screen px-[100px] bg-cover bg-no-repeat bg-center-top bg-fixed relative flex flex-col items-center bg-[url('https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/backgrounds/greyfade.jpg')]" >
         <div class="flex flex-col justify-center items-center">
-            <h1 class="section_title"> Escolha o seu herói</h1>
-            <div class="section_desc">
+            <h1 class="text-white text-[60px] font-reaver font-bold text-center mt-[100px] mb-[10px] uppercase tracking-[3px] leading-[112%]"> Escolha o seu herói</h1>
+            <div class="w-full max-w-[1000px] mx-auto text-gray-400 text-[26px] text-center font-thin mb-[30px]">
                 <p>Escolha seu herói favorito, conheça as habilidades, atributos e vantagens de cada um. veja
                     informações completa de cada heroi e seus counter heroes com base no meta atual!</p>
             </div>
             <!-- SEARCH -->
-            <div class="search_container">
-                <h1>Filtrar heróis</h1>
-                <div class="attr_container">
-                    <h1>Atributo</h1>
+            <div class="w-full max-w-[1200px] p-[10px] rounded-[5px] flex flex-row justify-between items-center border border-[#11111190] shadow-[0_0_30px_#00000050] mt-[20px] bg-gradient-to-r from-[rgba(0,0,0,0.5)] to-[rgba(0,0,0,0.3)]">
+                <h1 class="text-white w-[180px] text-[18px] uppercase tracking-[2px] mr-[10px] ml-[10px]">Filtrar heróis</h1>
+                <div class="flex items-center ml-5">
+                    <h1 class="text-[#808fa6] text-[17px] uppercase tracking-[2px] mr-[20px]">Atributo</h1>
                     <div v-on:click="toggleFilterAttr('str')" :class="toggleFilter === 'str' ? 'toggleFilter' : ''"
                         class="attr_image"
                         style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/herogrid/filter-str-active.png&quot;);">
@@ -110,9 +109,9 @@ const toggleFilterAttr = (attr: string) => {
                     </div>
                 </div>
 
-                <div class="filter">
-                    <div class="filter_content">
-                        <div class="filter_img"
+                <div class="w-[250px] flex flex-row justify-end">
+                    <div class="w-[250px] h-[50px] ml-[10px] bg-[#25282a] flex flex-row items-center">
+                        <div class="w-[26px] h-[26px] min-w-[26px] min-h-[26px] mr-[10px] ml-[10px] bg-cover bg-no-repeat"
                             style="background-image: url(&quot;https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/search.svg&quot;);">
                         </div>
                         <form><input v-model="state.search" type="search"></form>
@@ -130,15 +129,15 @@ const toggleFilterAttr = (attr: string) => {
                     <img v-show="hero.id !== 6"
                         :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/heroes/${hero.shortName}.png`"
                         alt="Hero image" class="w-full">
-                    <div class="hidden hero_hover_text group-hover:flex w-full h-8 z-30">
+                    <div class="hidden w-full h-[50px] absolute bottom-0 left-[5px] flex-row items-center transition-opacity transition-bottom ease-out duration-[0.2s] group-hover:flex  z-30">
                         <img class="w-7 h-7"
                             :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(hero.stats.primaryAttribute)}.png`" />
-                        <span class="hero_text">{{
+                        <span class="text-[18px] leading-[20px] font-reaver font-semibold text-white uppercase tracking-[1px] p-[8px] pl-0 text-shadow-[0_0_4px_#000]">{{
                             hero.displayName }}</span>
                     </div>
                     <div class="hidden group-hover:flex hero_shadow z-10">
-                        <div class="hero_shadow_main hero_shadow_main_content">
-                            <div class="hero_shadow_hover"
+                        <div class="absolute left-0 bottom-0 right-0 w-full h-full pointer-events-none">
+                            <div class="absolute w-full h-full"
                                 style="background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.733) 75%, rgb(0, 0, 0) 100%);">
                             </div>
                         </div>
