@@ -1,3 +1,3 @@
 [submodule "dist"]
     path = dist
-    url = git@github.com:GabrielCSTR/d2-heroes-info.git
+    url = git://github.com/GabrielCSTR/d2-heroes-info.git
