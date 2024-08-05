@@ -7,6 +7,7 @@ import { reactive } from 'vue';
 import { computed } from 'vue';
 import { useHeroeStore } from '@/stores/heroInfo';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import Footer from '@/components/Footer.vue';
 
 const toggleFilter = ref();
 const primaryAttribute = [
@@ -150,6 +151,7 @@ const toggleFilterAttr = (attr: string) => {
             </TransitionGroup>
         </div>
     </section>
+    <Footer />
 </template>
 
 <style scoped>

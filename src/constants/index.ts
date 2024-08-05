@@ -29,8 +29,8 @@ export interface IHeroesVs {
 }
 
 export const primaryAttributes = [
-    { name: 'agi', type: 'hero_agility' },
-    { name: 'str', type: 'hero_strength' },
-    { name: 'int', type: 'hero_intelligence' },
-    { name: 'all', type: 'hero_universal' },
+    { name: 'agi', type: 'hero_agility' , sortName: 'Agilidade' },
+    { name: 'str', type: 'hero_strength', sortName: 'Força' },
+    { name: 'int', type: 'hero_intelligence', sortName: 'Inteligencia' },
+    { name: 'all', type: 'hero_universal', sortName: 'Universal' },
 ];

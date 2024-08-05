@@ -6,6 +6,7 @@ import { useHeroeStore } from '@/stores/heroInfo';
 import { primaryAttributes, type IHero, type IHeroesVs } from '@/constants';
 import BadvsHeroes from '@/components/BadVsHeroes.vue';
 import GoodVsHeroes from '@/components/GoodVsHeroes.vue'
+import Footer from '@/components/Footer.vue'
 
 const router = useRouter();
 const route = useRoute();
@@ -19,8 +20,11 @@ const state = reactive({
 });
 
 
-const getPrimaryAttribute = (attr: string | undefined) => {
+const getPrimaryAttribute = (attr: string | undefined, sortName: boolean = false) => {
     if (!attr) return '';
+    if(sortName){
+        return primaryAttributes.find((item) => item.name === attr)?.sortName ?? '';
+    }
     return primaryAttributes.find((item) => item.name === attr)?.type ?? '';
 };
 
@@ -201,7 +205,7 @@ const restructureMatchupObject = (matchup: IHeroesVs, isCounter: boolean) => {
                 <div class="flex items-center">
                     <img :src="`https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/icons/${getPrimaryAttribute(appHeroStore.info?.attr)}.png`"
                         class="w-8 h-8">
-                    <div class="ml-[6px] text-white uppercase tracking-[2px] font-thin text-[24px]">Força</div>
+                    <div class="ml-[6px] text-white uppercase tracking-[2px] font-thin text-[24px]">{{getPrimaryAttribute(appHeroStore.info?.attr, true)}}</div>
                 </div>
                 <div
                     class="mt-[12px] font-reaver text-[80px] font-bold uppercase tracking-[2px] text-white leading-[110%]">
@@ -309,13 +313,7 @@ const restructureMatchupObject = (matchup: IHeroesVs, isCounter: boolean) => {
             </div>
         </div>
 
-        <footer class="text-center w-full z-50 p-8 bg-black">
-            <div class="flex flex-row justify-center items-center m-0 mb-2">
-                <a href="/home"><img class="max-h-[30px]"
-                        src="https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/dota_footer_logo.png"></a>
-            </div>
-            <div class="text-center text-sm text-gray-500 w-3/5 mx-auto max-w-lg">Dota2 Counters Picks</div>
-        </footer>
+      <Footer />
     </div>
 </template>
 
