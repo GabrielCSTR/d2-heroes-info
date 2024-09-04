@@ -1,33 +1,60 @@
-# dota2-counter-vue
+# DOTA 2 HEROES INFO
 
-This template should help get you started developing with Vue 3 in Vite.
+## 📃 About
 
-## Recommended IDE Setup
+📦 A simple website that will show information about counters picks and best heroes from hero
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- [x] Get all meta heroes
+- [x] Get specific hero
+- [x] Show counters picks
+- [x] Show best pick vs
+- [ ] Transalation US, ESP
 
-## Type Support for `.vue` Imports in TS
+# WEBSITE
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- HOME
+  <img src="./images/example01.png" />
 
-## Customize configuration
+- HERO PICK
+  <img src="./images/example02.png" style="margin-top: 5px;" />
+  <img src="./images/example03.png" style="margin-top: -10px;" />
+  <img src="./images/example04.png" style="margin-top: -6px;" />
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+### Features
 
-## Project Setup
+- Get information from [STRATZ](https://stratz.com/)
+  - Meta hero
+  - Hero info
 
-```sh
+## Development
+
+**Node.js 18 or newer is required.**
+
+Install it locally in your project folder:
+
+```bash
+git clone https://github.com/GabrielCSTR/d2-heroes-info.git
+cd ./d2-heroes-info
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## 💰 Support
 
-```sh
-npm run build
-```
+Not required but if you want... then by all means gib me ur cash please 💰 🔫
+
+[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/gabriel.dev/)
+
+## 👷‍♂️ Creator
+
+[![Contributors](https://contrib.rocks/image?repo=GabrielCSTR/dota2protracker-scraper)](https://github.com/GabrielCSTR)
+
+[![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?style=flat-square&logo=Twitter&logoColor=white)](https://twitter.com/gbrl_str) [![Twitch](https://img.shields.io/badge/Twitch-%239146FF.svg?style=flat-square&logo=Twitch&logoColor=white)](https://twitch.tv/xstrdoto)
+
+Made with 💖 and JavaScript!
+
+## License
+
+[MIT](https://github.com/GabrielCSTR/d2pt.js/blob/master/LICENSE)
+
+_This project is not affiliated with [STRATZ](https://stratz.com/) in any way._
